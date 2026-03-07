@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerAI - Your Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#050a14;--surface:#0d1829;--card:#111f35;--accent:#00d4ff;--accent2:#7b2fff;--accent3:#ff6b35;--text:#e8f0fe;--muted:#8899aa;--border:rgba(0,212,255,0.15);--success:#00e676}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+  nav{position:fixed;top:0;width:100%;z-index:100;padding:18px 60px;display:flex;justify-content:space-between;align-items:center;background:rgba(5,10,20,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent);text-decoration:none}.logo span{color:var(--accent2)}
+  .new-test{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-decoration:none;padding:10px 22px;border-radius:50px;font-size:14px;font-weight:600;transition:transform 0.2s}.new-test:hover{transform:translateY(-2px)}
+
+  .main{padding:100px 60px 60px;max-width:1000px;margin:0 auto}
+
+  /* HERO RESULT */
+  .result-hero{text-align:center;padding:60px 20px;position:relative;overflow:hidden;border-radius:28px;background:var(--card);border:1px solid var(--border);margin-bottom:32px}
+  .result-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(0,212,255,0.12),transparent 70%);pointer-events:none}
+  .result-tag{display:inline-block;background:rgba(0,230,118,0.1);color:var(--success);border:1px solid rgba(0,230,118,0.2);padding:8px 20px;border-radius:50px;font-size:13px;font-weight:700;margin-bottom:20px;animation:fadeDown 0.6s ease}
+  .career-icon{font-size:72px;margin-bottom:16px;animation:bounceIn 0.8s ease}
+  @keyframes bounceIn{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+  .career-name{font-family:'Syne',sans-serif;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:fadeUp 0.8s ease 0.2s both}
+  .greeting{color:var(--muted);font-size:18px;margin:12px 0;animation:fadeUp 0.8s ease 0.3s both}
+  .confidence-bar-wrap{max-width:400px;margin:24px auto 0;animation:fadeUp 0.8s ease 0.4s both}
+  .conf-label{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px}
+  .conf-label span:last-child{color:var(--success);font-weight:700;font-family:'Syne',sans-serif;font-size:18px}
+  .conf-bar{background:rgba(255,255,255,0.08);border-radius:50px;height:12px;overflow:hidden}
+  .conf-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--success));border-radius:50px;transition:width 1.5s ease;width:0}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+  /* CARDS GRID */
+  .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+  .info-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px}
+  .info-card h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .tag-chip{display:inline-block;background:rgba(0,212,255,0.1);color:var(--accent);font-size:12px;padding:5px 12px;border-radius:20px;margin:4px;font-weight:500;border:1px solid rgba(0,212,255,0.15)}
+  .tag-chip.purple{background:rgba(123,47,255,0.1);color:#b67fff;border-color:rgba(123,47,255,0.2)}
+  .tag-chip.orange{background:rgba(255,107,53,0.1);color:#ff9a75;border-color:rgba(255,107,53,0.2)}
+  .salary-big{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--success);margin:8px 0}
+  .growth-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,230,118,0.1);color:var(--success);border:1px solid rgba(0,230,118,0.2);padding:8px 16px;border-radius:50px;font-size:14px;font-weight:600}
+
+  /* TOP 3 */
+  .top3-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:24px}
+  .top3-card h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:20px}
+  .career-option{display:flex;align-items:center;gap:16px;padding:16px;background:var(--surface);border-radius:14px;margin-bottom:12px;border:1px solid var(--border);transition:transform 0.2s}
+  .career-option:first-child{border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.04)}
+  .career-option:hover{transform:translateX(4px)}
+  .opt-rank{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--muted);min-width:32px}
+  .career-option:first-child .opt-rank{color:var(--accent)}
+  .opt-name{font-weight:600;font-size:16px;flex:1}
+  .opt-bar-wrap{flex:2}
+  .opt-bar{background:rgba(255,255,255,0.08);border-radius:50px;height:8px;overflow:hidden}
+  .opt-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:50px;transition:width 1.2s ease}
+  .opt-pct{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);min-width:48px;text-align:right}
+
+  /* ACTIONS */
+  .actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:36px}
+  .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:16px 36px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,212,255,0.4)}
+  .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);padding:16px 36px;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+  footer{background:var(--surface);padding:30px 60px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:14px;margin-top:60px}
+  @media(max-width:768px){nav{padding:16px 20px}.main{padding:80px 20px 40px}.results-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Career<span>AI</span></a>
+  <a href="predict.html" class="new-test">🔄 New Test</a>
+</nav>
+
+<div class="main">
+
+  <!-- HERO RESULT -->
+  <div class="result-hero">
+    <div class="result-glow"></div>
+    <div class="result-tag">✅ Analysis Complete</div>
+    <div class="career-icon" id="career-icon">🤖</div>
+    <div class="career-name" id="career-name">Loading...</div>
+    <div class="greeting" id="greeting">Analyzing your profile...</div>
+    <div class="confidence-bar-wrap">
+      <div class="conf-label"><span>Prediction Confidence</span><span id="conf-pct">0%</span></div>
+      <div class="conf-bar"><div class="conf-fill" id="conf-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- TOP 3 -->
+  <div class="top3-card">
+    <h3>🏆 Your Top 3 Career Matches</h3>
+    <div id="top3-list"></div>
+  </div>
+
+  <!-- INFO GRID -->
+  <div class="results-grid">
+    <div class="info-card">
+      <h3>💰 Salary Range</h3>
+      <div class="salary-big" id="salary">₹8-25 LPA</div>
+      <div class="growth-badge" id="growth">📈 Very High Growth</div>
+    </div>
+    <div class="info-card">
+      <h3>📝 About This Role</h3>
+      <p id="description" style="color:var(--muted);line-height:1.7;font-size:14px">Loading...</p>
+    </div>
+    <div class="info-card">
+      <h3>🛠️ Key Skills to Learn</h3>
+      <div id="skills-list"></div>
+    </div>
+    <div class="info-card">
+      <h3>📚 Recommended Courses</h3>
+      <div id="courses-list"></div>
+    </div>
+  </div>
+
+  <div class="info-card" style="margin-bottom:24px">
+    <h3>🏢 Top Companies Hiring</h3>
+    <div id="companies-list"></div>
+  </div>
+
+  <div class="actions">
+    <a href="predict.html" class="btn-primary">🔄 Retake Test</a>
+    <a href="index.html" class="btn-outline">🏠 Home</a>
+    <button class="btn-outline" onclick="window.print()">🖨️ Print Results</button>
+  </div>
+</div>
+
+<footer>
+  <p>🤖 CareerAI — ML Career Prediction | 87%+ Accuracy | Python + Random Forest</p>
+</footer>
+
+<script>
+  window.onload = () => {
+    const raw = localStorage.getItem('careerResult');
+    if(!raw){ window.location.href='predict.html'; return; }
+    const data = JSON.parse(raw);
+    const info = data.career_info || {};
+
+    // Update hero
+    document.getElementById('career-icon').textContent = info.icon || '🎯';
+    document.getElementById('career-name').textContent = data.predicted_career;
+    document.getElementById('greeting').textContent = `${data.name}, you are best suited for this role!`;
+    document.getElementById('conf-pct').textContent = data.confidence+'%';
+    setTimeout(()=>{
+      document.getElementById('conf-fill').style.width = data.confidence+'%';
+    }, 300);
+
+    // Top 3
+    const top3 = data.top3_careers || [];
+    const t3el = document.getElementById('top3-list');
+    const ranks = ['🥇','🥈','🥉'];
+    top3.forEach((item,i) => {
+      t3el.innerHTML += `
+        <div class="career-option">
+          <div class="opt-rank">${ranks[i]||i+1}</div>
+          <div class="opt-name">${item.career}</div>
+          <div class="opt-bar-wrap">
+            <div class="opt-bar"><div class="opt-fill" id="bar-${i}" style="width:0"></div></div>
+          </div>
+          <div class="opt-pct">${item.confidence}%</div>
+        </div>`;
+    });
+    setTimeout(()=>{
+      top3.forEach((item,i) => {
+        const el = document.getElementById('bar-'+i);
+        if(el) el.style.width = item.confidence+'%';
+      });
+    }, 400);
+
+    // Info
+    document.getElementById('salary').textContent = info.salary || 'N/A';
+    document.getElementById('growth').textContent = '📈 '+info.growth+' Growth';
+    document.getElementById('description').textContent = info.description || '';
+
+    // Skills
+    const skillsEl = document.getElementById('skills-list');
+    (info.skills||[]).forEach(s => { skillsEl.innerHTML += `<span class="tag-chip">${s}</span>`; });
+
+    // Courses
+    const coursesEl = document.getElementById('courses-list');
+    (info.courses||[]).forEach(c => { coursesEl.innerHTML += `<span class="tag-chip purple">📖 ${c}</span>`; });
+
+    // Companies
+    const compEl = document.getElementById('companies-list');
+    (info.companies||[]).forEach(c => { compEl.innerHTML += `<span class="tag-chip orange">🏢 ${c}</span>`; });
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+/* =====================================================
+   CareerAI - Global Stylesheet
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ---- CSS Variables ---- */
+:root {
+    --bg:       #050a14;
+    --surface:  #0d1829;
+    --card:     #111f35;
+    --accent:   #00d4ff;
+    --accent2:  #7b2fff;
+    --accent3:  #ff6b35;
+    --text:     #e8f0fe;
+    --muted:    #8899aa;
+    --border:   rgba(0, 212, 255, 0.15);
+    --success:  #00e676;
+    --warning:  #ffc107;
+    --danger:   #ff4444;
+
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+
+    --radius-sm:  10px;
+    --radius-md:  16px;
+    --radius-lg:  24px;
+    --radius-xl:  32px;
+    --radius-full: 9999px;
+
+    --shadow-sm: 0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+    --glow:      0 0 30px rgba(0,212,255,0.2);
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Typography ---- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-head);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+p { color: var(--muted); line-height: 1.7; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { opacity: 0.85; }
+
+/* ---- Navbar ---- */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 60px;
+    background: rgba(5, 10, 20, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+}
+
+.navbar-logo {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+.navbar-logo span { color: var(--accent2); }
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+}
+
+.navbar-links a {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+    text-decoration: none;
+}
+
+.navbar-links a:hover,
+.navbar-links a.active { color: var(--accent); }
+
+/* ---- Buttons ---- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+}
+.btn-primary:hover { box-shadow: 0 12px 32px rgba(0,212,255,0.35); }
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn-lg { padding: 16px 40px; font-size: 17px; }
+.btn-sm { padding: 8px 18px; font-size: 13px; }
+
+/* ---- Cards ---- */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0,212,255,0.28);
+    box-shadow: var(--shadow-md);
+}
+
+/* ---- Section Layout ---- */
+.section {
+    padding: 96px 60px;
+}
+
+.section-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+}
+
+.section-title {
+    font-family: var(--font-head);
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: var(--text);
+}
+
+.section-title .dim { color: var(--muted); }
+
+/* ---- Form Elements ---- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-control {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: var(--font-body);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+
+.form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+}
+
+.form-control::placeholder { color: var(--muted); }
+
+/* ---- Range Slider ---- */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: var(--radius-full);
+    outline: none;
+    cursor: pointer;
+    background: rgba(0,212,255,0.1);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0,212,255,0.5);
+    transition: transform 0.15s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* ---- Badges / Chips ---- */
+.chip {
+    display: inline-block;
+    padding: 5px 13px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+
+.chip-blue   { background: rgba(0,212,255,0.1);   color: var(--accent);  border-color: rgba(0,212,255,0.2); }
+.chip-purple { background: rgba(123,47,255,0.1); color: #b67fff;        border-color: rgba(123,47,255,0.2); }
+.chip-green  { background: rgba(0,230,118,0.1);  color: var(--success); border-color: rgba(0,230,118,0.2); }
+.chip-orange { background: rgba(255,107,53,0.1); color: #ff9a75;        border-color: rgba(255,107,53,0.2); }
+
+/* ---- Progress Bar ---- */
+.progress-track {
+    background: var(--surface);
+    border-radius: var(--radius-full);
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.5s ease;
+}
+
+/* ---- Divider ---- */
+.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+}
+
+/* ---- Grid Helpers ---- */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+/* ---- Page Wrapper ---- */
+.page-wrapper {
+    min-height: 100vh;
+    padding-top: 64px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ---- Loading Spinner ---- */
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Overlay ---- */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 10, 20, 0.92);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+}
+.overlay.active { display: flex; }
+.overlay-title { font-family: var(--font-head); font-size: 20px; font-weight: 700; }
+.overlay-sub   { color: var(--muted); font-size: 14px; }
+
+/* ---- Utility Classes ---- */
+.text-center  { text-align: center; }
+.text-accent  { color: var(--accent); }
+.text-muted   { color: var(--muted); }
+.text-success { color: var(--success); }
+.fw-bold      { font-weight: 700; }
+.fw-800       { font-weight: 800; }
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-32 { margin-bottom: 32px; }
+
+/* ---- Gradient Text ---- */
+.gradient-text {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ---- Animations ---- */
+@keyframes fadeUp   { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn  { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes pulse    { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }
+
+.anim-fade-up   { animation: fadeUp   0.6s ease both; }
+.anim-fade-down { animation: fadeDown 0.6s ease both; }
+.anim-fade-in   { animation: fadeIn   0.5s ease both; }
+.anim-scale-in  { animation: scaleIn  0.5s ease both; }
+
+/* ---- Footer ---- */
+.footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 32px 60px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.footer strong { color: var(--accent); }
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+    .navbar { padding: 0 20px; }
+    .navbar-links { display: none; }
+    .section { padding: 72px 20px; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .footer { padding: 24px 20px; }
+}

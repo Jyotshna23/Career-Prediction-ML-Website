@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerAI - Login</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 30% 40%, rgba(0,212,255,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 75% 65%, rgba(123,47,255,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .login-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 960px;
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  }
+
+  /* Left Panel */
+  .login-left {
+    padding: 56px 48px;
+    background: linear-gradient(145deg, #0a1628 0%, #0d1f3c 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .login-left .brand {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 36px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .login-left .brand span { color: var(--accent2); }
+
+  .login-left h2 {
+    font-family: var(--font-head);
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .login-left p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  .feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .feature-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* Right Panel */
+  .login-right {
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .tab-row {
+    display: flex;
+    background: var(--surface);
+    border-radius: var(--radius-full);
+    padding: 4px;
+    margin-bottom: 36px;
+    border: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+  }
+
+  .form-title {
+    font-family: var(--font-head);
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .form-subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 8px;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,212,255,0.35);
+  }
+
+  .divider-or {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 22px 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .divider-or::before,
+  .divider-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .guest-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+  }
+
+  .guest-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .error-msg {
+    background: rgba(255,68,68,0.1);
+    border: 1px solid rgba(255,68,68,0.25);
+    color: #ff6b6b;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .success-msg {
+    background: rgba(0,230,118,0.1);
+    border: 1px solid rgba(0,230,118,0.25);
+    color: var(--success);
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .login-grid { grid-template-columns: 1fr; }
+    .login-left { display: none; }
+    .login-right { padding: 40px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="login-page">
+  <div class="login-bg"></div>
+
+  <div class="login-grid anim-fade-in">
+    <!-- Left Branding Panel -->
+    <div class="login-left">
+      <a href="index.html" class="brand">Career<span>AI</span></a>
+      <h2>Predict Your Ideal IT Career</h2>
+      <p>Our ML model analyzes your skills and recommends the most suitable tech career path — with 90%+ accuracy.</p>
+      <ul class="feature-list">
+        <li><span class="feature-dot"></span>15 skill parameters analyzed</li>
+        <li><span class="feature-dot"></span>10+ IT career paths covered</li>
+        <li><span class="feature-dot"></span>Salary and growth insights</li>
+        <li><span class="feature-dot"></span>Course and company recommendations</li>
+        <li><span class="feature-dot"></span>Random Forest + Gradient Boosting</li>
+      </ul>
+    </div>
+
+    <!-- Right Form Panel -->
+    <div class="login-right">
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+        <button class="tab-btn"        onclick="switchTab('register')">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div class="tab-panel active" id="panel-login">
+        <div class="form-title">Welcome back</div>
+        <div class="form-subtitle">Sign in to access your predictions</div>
+
+        <div class="error-msg"   id="login-error"></div>
+        <div class="success-msg" id="login-success"></div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="form-control" id="login-email" placeholder="you@email.com"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-control" id="login-password" placeholder="Enter password"/>
+        </div>
+
+        <button class="submit-btn" onclick="handleLogin()">Sign In</button>
+
+        <div class="divider-or">or</div>
+        <a href="predict.html" class="guest-btn">Continue as Guest (no login needed)</a>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div class="tab-panel" id="panel-register">
+        <div class="form-title">Create account</div>
+        <div class="form-subtitle">Start predicting your career today</div>
+
+        <div class="error-msg"   id="reg-error"></div>
+        <div class="success-msg" id="reg-success"></div>
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" class="form-control" id="reg-name" placeholder="Your full name"/>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="form-control" id="reg-email" placeholder="you@email.com"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-control" id="reg-password" placeholder="Min 6 characters"/>
+        </div>
+
+        <button class="submit-btn" onclick="handleRegister()">Create Account</button>
+
+        <div class="divider-or">or</div>
+        <a href="predict.html" class="guest-btn">Continue as Guest (no login needed)</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="main.js"></script>
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+    });
+    document.getElementById('panel-login').classList.toggle('active',    tab === 'login');
+    document.getElementById('panel-register').classList.toggle('active', tab === 'register');
+  }
+
+  async function handleLogin() {
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const errEl    = document.getElementById('login-error');
+    const sucEl    = document.getElementById('login-success');
+
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+
+    if (!email || !password) {
+      errEl.textContent = 'Please fill in all fields.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    try {
+      const res  = await fetch('/api/login', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        sucEl.textContent = 'Login successful! Redirecting...';
+        sucEl.style.display = 'block';
+        setTimeout(() => window.location.href = 'predict.html', 1200);
+      } else {
+        errEl.textContent = data.error || 'Invalid credentials.';
+        errEl.style.display = 'block';
+      }
+    } catch (e) {
+      // Demo mode fallback
+      sucEl.textContent = 'Demo mode: Redirecting to prediction...';
+      sucEl.style.display = 'block';
+      setTimeout(() => window.location.href = 'predict.html', 1200);
+    }
+  }
+
+  async function handleRegister() {
+    const name     = document.getElementById('reg-name').value.trim();
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const errEl    = document.getElementById('reg-error');
+    const sucEl    = document.getElementById('reg-success');
+
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+
+    if (!name || !email || !password) {
+      errEl.textContent = 'Please fill in all fields.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    if (password.length < 6) {
+      errEl.textContent = 'Password must be at least 6 characters.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    try {
+      const res  = await fetch('/api/register', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name, email, password })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        sucEl.textContent = 'Account created! Redirecting...';
+        sucEl.style.display = 'block';
+        setTimeout(() => window.location.href = 'predict.html', 1200);
+      } else {
+        errEl.textContent = data.error || 'Registration failed.';
+        errEl.style.display = 'block';
+      }
+    } catch (e) {
+      sucEl.textContent = 'Demo mode: Redirecting to prediction...';
+      sucEl.style.display = 'block';
+      setTimeout(() => window.location.href = 'predict.html', 1200);
+    }
+  }
+</script>
+</body>
+</html>
