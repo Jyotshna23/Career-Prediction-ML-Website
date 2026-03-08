@@ -1,138 +1,147 @@
-# 🤖 Career Prediction Website Using Machine Learning
+# Career Prediction Website — ML-Powered Career Guidance System
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
-![Flask](https://img.shields.io/badge/Flask-3.0-green?style=for-the-badge&logo=flask)
-![ML](https://img.shields.io/badge/Accuracy-87%25+-orange?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Live-success?style=for-the-badge)
+A machine learning web application that predicts the most suitable IT career path based on a user's skill profile. Built with Python, Flask, and Scikit-learn using an ensemble of Random Forest and Gradient Boosting classifiers.
 
-> An AI-powered web application that predicts the best IT career for users based on their skills and interests using Machine Learning (Random Forest + Gradient Boosting).
-
----
-
-## 🎯 Project Overview
-
-This project uses a trained **Random Forest Classifier** (87%+ accuracy) to predict suitable IT careers based on 15 skill parameters including technical abilities, soft skills, and domain interests.
-
-### 🏆 Predicted Careers
-| Career | Avg Salary | Growth |
-|--------|-----------|--------|
-| AI/ML Engineer | ₹8-25 LPA | 🔥 Very High |
-| Software Developer | ₹5-20 LPA | 📈 High |
-| Cloud Engineer | ₹7-22 LPA | 🔥 Very High |
-| Data Scientist | ₹7-20 LPA | 🔥 Very High |
-| DevOps Engineer | ₹6-22 LPA | 🔥 Very High |
-| QA/Testing Engineer | ₹4-15 LPA | 📊 Medium-High |
-| Full Stack Developer | ₹5-18 LPA | 📈 High |
-| UI/UX Designer | ₹4-18 LPA | 📈 High |
-| IT Project Manager | ₹10-30 LPA | 📈 High |
-| Business Analyst | ₹5-16 LPA | 📊 Medium |
+![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python)
+![Flask](https://img.shields.io/badge/Flask-3.0-black?style=flat-square&logo=flask)
+![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.3-orange?style=flat-square&logo=scikit-learn)
+![Accuracy](https://img.shields.io/badge/Accuracy-94%25-brightgreen?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Live-success?style=flat-square)
 
 ---
 
-## 🧠 ML Model Details
+## Overview
 
-| Parameter | Value |
-|-----------|-------|
-| Algorithm | Random Forest + Gradient Boosting |
-| Training Samples | 1,200 |
-| Features | 15 (skills + interests) |
-| Test Accuracy | **87.4%** |
-| CV Score (5-fold) | 86.8% ± 1.2% |
+CareerAI analyzes 15 skill parameters — including logical thinking, technical skills, creativity, and domain interests — and recommends the best-fit IT role from 10 career categories. It provides confidence scores, salary ranges, recommended courses, and top hiring companies for each prediction.
 
 ---
 
-## 🗂️ Project Structure
+## Features
 
-```
-career_prediction_website/
-│
-├── 📓 career_prediction_model.py   ← Run in Google Colab
-├── 🐍 app.py                       ← Flask Backend
-├── 📋 requirements.txt
-├── 📖 README.md
-│
-├── 📁 model/
-│   ├── career_model.pkl            ← Trained ML model
-│   ├── scaler.pkl                  ← Feature scaler
-│   └── label_encoder.pkl           ← Career label encoder
-│
-├── 📁 frontend/
-│   ├── index.html                  ← Home Page
-│   ├── predict.html                ← Assessment Form
-│   ├── result.html                 ← Results Page
-│   └── dashboard.html              ← Analytics Dashboard
-│
-└── 📁 database/
-    └── users.db                    ← SQLite (auto-created)
-```
+- Skill-based assessment across 15 parameters
+- ML ensemble model (Random Forest + Gradient Boosting) with 94% accuracy
+- Top 3 career matches with confidence percentages
+- Salary range, key skills, recommended courses, and hiring companies per role
+- Prediction history dashboard with SQLite storage
+- Printable PDF result output
 
 ---
 
-## 🚀 Setup & Run
+## Tech Stack
 
-### Step 1: Train ML Model (Google Colab)
-```python
-# Upload career_prediction_model.py to Google Colab
-# Run all cells
-# Download: career_model.pkl, scaler.pkl, label_encoder.pkl
-# Place downloaded files in /model/ folder
+| Layer | Technology |
+|-------|-----------|
+| ML Model | Scikit-learn, Random Forest, Gradient Boosting |
+| Backend | Python, Flask, Flask-CORS |
+| Database | SQLite |
+| Frontend | HTML5, CSS3, Vanilla JavaScript |
+| Training | Google Colab |
+
+---
+
+## ML Model — How It Works
+
+1. **Input** — User rates 15 skills on a scale of 1–10
+2. **Preprocessing** — StandardScaler normalizes the input
+3. **Prediction** — VotingClassifier (RF weight=2, GB weight=1) with soft voting
+4. **Output** — Predicted career + top 3 matches with confidence scores
+
+**Careers Supported:**
+AI/ML Engineer, Software Developer, Cloud Engineer, Data Scientist, Cybersecurity Analyst, DevOps Engineer, UI/UX Designer, Database Administrator, Network Engineer, QA Test Engineer
+
+**Training Data:** 2,000 samples | 10 classes | 5-fold Stratified Cross-Validation
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Home page |
+| GET | `/predict.html` | Skill assessment form |
+| POST | `/api/predict` | Run ML prediction |
+| GET | `/api/stats` | Dashboard statistics |
+| POST | `/api/register` | User registration |
+| POST | `/api/login` | User login |
+
+**Sample Request — `/api/predict`:**
+```json
+{
+  "name": "Jyotshna",
+  "logical_thinking": 8,
+  "creativity": 7,
+  "technical_skills": 9,
+  "interest_in_coding": 9,
+  "interest_in_data": 8
+}
 ```
 
-### Step 2: Install Dependencies
+**Sample Response:**
+```json
+{
+  "predicted_career": "AI/ML Engineer",
+  "confidence": 82.0,
+  "top3_careers": [
+    ["AI/ML Engineer", 82.0],
+    ["Software Developer", 73.0],
+    ["Cloud Engineer", 64.0]
+  ],
+  "salary_range": "8-25 LPA"
+}
+```
+
+---
+
+## Project Structure
+
+```
+career-prediction-website/
+├── app.py                  # Flask backend + API routes
+├── requirements.txt        # Python dependencies
+├── .gitignore
+├── frontend/
+│   ├── index.html          # Landing page
+│   ├── predict.html        # Skill assessment form
+│   ├── result.html         # Prediction results
+│   ├── dashboard.html      # Prediction history
+│   ├── login.html          # User authentication
+│   ├── style.css           # Global styles
+│   └── main.js             # Frontend logic
+└── model/
+    ├── career_model.pkl    # Trained ensemble model
+    ├── scaler.pkl          # StandardScaler
+    ├── label_encoder.pkl   # LabelEncoder
+    └── feature_names.pkl   # Feature column names
+```
+
+---
+
+## Setup and Installation
+
 ```bash
+# Clone the repository
+git clone https://github.com/Jyotshna23/Career-Prediction-ML-Website.git
+cd Career-Prediction-ML-Website
+
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### Step 3: Run Flask Server
-```bash
+# Run the application
 python app.py
-```
 
-### Step 4: Open Browser
-```
+# Open in browser
 http://localhost:5000
 ```
 
 ---
 
-## 📸 Screenshots
+## Output
 
-| Page | Description |
-|------|-------------|
-| Home Page | Landing page with career info |
-| Assessment | 15 skill rating sliders |
-| Results | Career prediction with confidence |
-| Dashboard | Analytics & model stats |
+See [output_result.pdf](output_result.pdf) for a sample prediction result.
 
 ---
 
-## 🛠️ Tech Stack
+## Author
 
-- **ML**: Python, Scikit-learn, Random Forest, Gradient Boosting
-- **Backend**: Flask, SQLite
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Visualization**: Chart.js, Matplotlib, Seaborn
-- **Deployment**: Localhost / Render / Railway
-
----
-
-## 👨‍💻 Skills Demonstrated
-
-- Machine Learning (Classification, Model Training)
-- Data Preprocessing & Feature Engineering
-- Full Stack Web Development
-- REST API Design
-- Database Management (SQLite)
-- Data Visualization
-
----
-
-## 📊 Model Evaluation
-
-- Accuracy: **87.4%**
-- Cross-Validation: **86.8% ± 1.2%**
-- Algorithm: Random Forest (200 trees)
-
----
-
-*Built for portfolio — demonstrates ML, Full Stack, and Data Science skills*
+**Jyotshna Pogiri**
+- GitHub: [Jyotshna23](https://github.com/Jyotshna23)
