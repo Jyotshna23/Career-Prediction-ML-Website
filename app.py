@@ -14,7 +14,7 @@ CORS(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, 'model')
-FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
+FRONTEND_DIR = BASE_DIR
 
 # Load ML Models
 def load_models():
@@ -233,3 +233,4 @@ if __name__ == '__main__':
     print("=" * 50)
 
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+
