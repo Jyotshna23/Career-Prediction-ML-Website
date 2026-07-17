@@ -18,8 +18,18 @@ FRONTEND_DIR = BASE_DIR
 
 # Load ML Models
 def load_models():
-    return None, None, None
-   
+    try:
+        with open(os.path.join(MODEL_DIR, 'model.pkl'), 'rb') as f:
+            _model = pickle.load(f)
+        with open(os.path.join(MODEL_DIR, 'scaler.pkl'), 'rb') as f:
+            _scaler = pickle.load(f)
+        with open(os.path.join(MODEL_DIR, 'label_encoder.pkl'), 'rb') as f:
+            _le = pickle.load(f)
+        print("ML model loaded successfully.")
+        return _model, _scaler, _le
+    except Exception as e:
+        print(f"Could not load ML model, using fallback scoring: {e}")
+        return None, None, None
 
 model, scaler, le = load_models()
 
