@@ -295,6 +295,7 @@
       });
       const data = await res.json();
       if(data.success){
+        localStorage.setItem('wasOffline', 'false');
         localStorage.setItem('careerResult', JSON.stringify(data));
         window.location.href = 'result.html';
       } else {
@@ -332,6 +333,7 @@
           growth:'Very High'
         }
       };
+      localStorage.setItem('wasOffline', 'true');
       localStorage.setItem('careerResult', JSON.stringify(fakeResult));
       window.location.href = 'result.html';
     }
