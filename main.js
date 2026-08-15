@@ -134,6 +134,34 @@ function showAlert(message, type = 'info') {
 }
 
 // =====================================================
+// OFFLINE / DEMO MODE BANNER
+// =====================================================
+
+function showOfflineBanner() {
+    const existing = document.getElementById('offline-banner');
+    if (existing) return;
+
+    const banner = document.createElement('div');
+    banner.id = 'offline-banner';
+    Object.assign(banner.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        right: '0',
+        zIndex: '99998',
+        background: '#ffc107',
+        color: '#1a1a1a',
+        textAlign: 'center',
+        padding: '10px 16px',
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: '14px',
+        fontWeight: '700'
+    });
+    banner.textContent = '⚠️ Demo mode — backend unavailable. This result is an approximation, not the trained ML model.';
+    document.body.prepend(banner);
+}
+
+// =====================================================
 // PREDICTION API CALL
 // =====================================================
 
