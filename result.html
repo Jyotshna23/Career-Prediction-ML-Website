@@ -127,7 +127,7 @@
 </div>
 
 <footer>
-  <p>🤖 CareerAI — ML Career Prediction | 87%+ Accuracy | Python + Random Forest</p>
+  <p>🤖 CareerAI — ML Career Prediction | Ensemble Model (Random Forest + Gradient Boosting) | 94% Test Accuracy</p>
 </footer>
 
 <script>
@@ -137,6 +137,14 @@
     const data = JSON.parse(raw);
     const info = data.career_info || {};
 
+    // Offline/demo mode banner
+    if (localStorage.getItem('wasOffline') === 'true') {
+      const banner = document.createElement('div');
+      banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#ffc107;color:#1a1a1a;text-align:center;padding:10px 16px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:700;';
+      banner.textContent = '⚠️ Demo mode — backend unavailable. This result is an approximation, not the trained ML model.';
+      document.body.prepend(banner);
+    }
+
     // Update hero
     document.getElementById('career-icon').textContent = info.icon || '🎯';
     document.getElementById('career-name').textContent = data.predicted_career;
@@ -145,6 +153,12 @@
     setTimeout(()=>{
       document.getElementById('conf-fill').style.width = data.confidence+'%';
     }, 300);
+
+    // Confidence clarity note
+    const confNote = document.createElement('div');
+    confNote.style.cssText = 'font-size:12px;color:var(--muted);margin-top:8px;';
+    confNote.textContent = 'ℹ️ This is the confidence for this one prediction across 10 possible careers — a different metric from the model\'s overall 94% test accuracy.';
+    document.querySelector('.confidence-bar-wrap').appendChild(confNote);
 
     // Top 3
     const top3 = data.top3_careers || [];
