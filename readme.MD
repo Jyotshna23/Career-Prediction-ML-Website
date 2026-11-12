@@ -4,11 +4,7 @@
 
 **An end-to-end Machine Learning web application that evaluates 15 cognitive, technical, and domain-interest traits to predict the best-fit IT career path with confidence probabilities and actionable learning roadmaps.**
 
-![Python](https://shields.io)
-![Flask](https://shields.io)
-![Scikit-learn](https://shields.io)
-![SQLite](https://shields.io)
-![Accuracy](https://shields.io)
+`Python 3.10+` • `Flask 3.0.3` • `Scikit-learn 1.6.1` • `SQLite 3` • `Model Accuracy: 94%`
 
 </div>
 
