@@ -1,16 +1,16 @@
 # Career Prediction Website - Flask Backend
 
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
+from flask import Flask, request, jsonify, send_from_directory, abort
+from werkzeug.security import generate_password_hash, check_password_hash
 import pickle
 import numpy as np
 import sqlite3
 import os
 import datetime
 import json
+import re
 
 app = Flask(__name__)
-CORS(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, 'model')
@@ -105,17 +105,36 @@ def dashboard_page():
 def login_page():
     return send_from_directory(FRONTEND_DIR, 'login.html')
 
+# Only these files may be served. Everything else (app.py, model files, database) returns 404.
+ALLOWED_STATIC = {'style.css', 'main.js'}
+
 @app.route('/<path:filename>')
 def serve_static(filename):
+    if filename not in ALLOWED_STATIC:
+        abort(404)
     return send_from_directory(FRONTEND_DIR, filename)
+
+# Input validation helpers
+EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+
+def clean_text(value, max_len):
+    return str(value or '').strip()[:max_len]
+
+def validate_scores(data):
+    # Every score must be a number from 1 to 10 (the slider range on the form).
+    for f in feature_cols:
+        v = float(data.get(f, 5))
+        if not 1 <= v <= 10:
+            raise ValueError(f'{f} out of range')
 
 # API - Predict
 @app.route('/api/predict', methods=['POST'])
 def predict():
     try:
-        data   = request.get_json()
-        name   = data.get('name', 'User')
-        email  = data.get('email', '')
+        data   = request.get_json(silent=True) or {}
+        name   = clean_text(data.get('name'), 100) or 'User'
+        email  = clean_text(data.get('email'), 254)
+        validate_scores(data)
 
         features = [float(data.get(f, 5)) for f in feature_cols]
 
@@ -159,8 +178,11 @@ def predict():
 
         return jsonify({'success': True, 'name': name, 'predicted_career': predicted_career, 'confidence': round(confidence, 1), 'top3_careers': top3, 'career_info': career_details})
 
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
+    except (ValueError, TypeError):
+        return jsonify({'success': False, 'error': 'Invalid input. Scores must be numbers from 1 to 10.'}), 400
+    except Exception:
+        app.logger.exception('Prediction failed')
+        return jsonify({'success': False, 'error': 'Server error. Please try again.'}), 500
 
 # API - Stats
 @app.route('/api/stats', methods=['GET'])
@@ -180,51 +202,61 @@ def get_stats():
             'top_careers':       [{'career': r[0], 'count': r[1]} for r in top_careers],
             'recent_predictions':[{'name': r[0], 'career': r[1], 'confidence': r[2], 'date': r[3]} for r in recent]
         })
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    except Exception:
+        app.logger.exception('Stats failed')
+        return jsonify({'error': 'Server error. Please try again.'}), 500
 
 # API - Login
 @app.route('/api/login', methods=['POST'])
 def login():
     try:
-        data  = request.get_json()
-        email = data.get('email','')
-        pwd   = data.get('password','')
+        data  = request.get_json(silent=True) or {}
+        email = clean_text(data.get('email'), 254).lower()
+        pwd   = str(data.get('password') or '')
         conn  = sqlite3.connect(DB_PATH)
         c     = conn.cursor()
-        c.execute('SELECT id, name FROM users WHERE email=? AND password=?', (email, pwd))
+        c.execute('SELECT id, name, password FROM users WHERE email=?', (email,))
         user  = c.fetchone()
         conn.close()
-        if user:
+        # Passwords are stored as hashes, so compare with check_password_hash.
+        if user and check_password_hash(user[2], pwd):
             return jsonify({'success': True, 'name': user[1]})
-        return jsonify({'success': False, 'error': 'Invalid email or password.'})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+        return jsonify({'success': False, 'error': 'Invalid email or password.'}), 401
+    except Exception:
+        app.logger.exception('Login failed')
+        return jsonify({'success': False, 'error': 'Server error. Please try again.'}), 500
 
 # API - Register
 @app.route('/api/register', methods=['POST'])
 def register():
     try:
-        data  = request.get_json()
-        name  = data.get('name','')
-        email = data.get('email','')
-        pwd   = data.get('password','')
+        data  = request.get_json(silent=True) or {}
+        name  = clean_text(data.get('name'), 100)
+        email = clean_text(data.get('email'), 254).lower()
+        pwd   = str(data.get('password') or '')
+        if not name:
+            return jsonify({'success': False, 'error': 'Name is required.'}), 400
+        if not EMAIL_RE.match(email):
+            return jsonify({'success': False, 'error': 'Enter a valid email address.'}), 400
+        if len(pwd) < 8 or len(pwd) > 128:
+            return jsonify({'success': False, 'error': 'Password must be 8 to 128 characters.'}), 400
         conn  = sqlite3.connect(DB_PATH)
         c     = conn.cursor()
         c.execute('INSERT INTO users (name, email, password, created_at) VALUES (?,?,?,?)',
-                  (name, email, pwd, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+                  (name, email, generate_password_hash(pwd), datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
         conn.commit()
         conn.close()
         return jsonify({'success': True})
     except sqlite3.IntegrityError:
-        return jsonify({'success': False, 'error': 'Email already registered.'})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+        return jsonify({'success': False, 'error': 'Email already registered.'}), 409
+    except Exception:
+        app.logger.exception('Register failed')
+        return jsonify({'success': False, 'error': 'Server error. Please try again.'}), 500
 
 # API - Health
 @app.route('/api/health', methods=['GET'])
 def health():
-    return jsonify({'status': 'running', 'model_loaded': model is not None, 'accuracy': '94%'})
+    return jsonify({'status': 'running', 'model_loaded': model is not None})
 
 if __name__ == '__main__':
     print("=" * 50)
